@@ -233,6 +233,9 @@ public:
     // of this function.
     //------------------------------------------------------------------
     void set (float x, float y, float z);
+    void setX(float x);
+    void setY(float y);
+    void setZ(float z);
     //------------------------------------------------------------------
     // MakeZero
     //------------------------------------------------------------------
@@ -490,6 +493,15 @@ inline float Vector3D::getZ(){
 inline void Vector3D::set(float x, float y, float z){
     this->x = x;
     this->y = y;
+    this->z = z;
+}
+inline void Vector3D::setY(float y){
+    this->y = y;
+}
+inline void Vector3D::setX(float x){
+    this->x = x;
+}
+inline void Vector3D::setZ(float z){
     this->z = z;
 }
 

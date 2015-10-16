@@ -62,9 +62,12 @@ public:
 			vy=velocidad.getY();
 			vz=velocidad.getZ();
 			velocidad.set(vx,-vy*0.4,vz);
+			p.setY(0.0);
 		}
-		else if (fabs(p.getX())>2)
+		else if (fabs(p.getX())>2){
 			    velocidad*=-0.95;
+			    p.setX(0.0);
+		}
 		     else
 			    posicion=p;
 		posicion=p;

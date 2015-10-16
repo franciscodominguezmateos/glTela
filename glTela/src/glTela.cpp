@@ -115,6 +115,10 @@ void idle()
     }
     h.aplicaFuerza();
     t.limpiaFuerza();
+    for(Particula *p:t.getPuntos()){
+    	Vector3D fr=rv.getFuerza(p);
+    	p->acumulaFuerza(fr);
+    }
     t.acumulaFuerza(gravedad);
     t.aplicaFuerza();
     usleep(1000000*Particula::dt);

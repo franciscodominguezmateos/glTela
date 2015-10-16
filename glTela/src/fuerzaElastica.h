@@ -20,7 +20,7 @@ class FuerzaElastica {
 	float Ka;
 	Particula *p1,*p2;
 public:
-	inline FuerzaElastica():longRep(0.25),Km(800.0/1.0),Ka(60.0),p1(nullptr),p2(nullptr){};
+	inline FuerzaElastica():longRep(0.25),Km(100.0/1.0),Ka(00.0),p1(nullptr),p2(nullptr){};
 	inline Particula *getParticula1(){return p1;}
 	inline Particula *getParticula2(){return p2;}
 	inline void setParticula1(Particula *p){p1=p;}
