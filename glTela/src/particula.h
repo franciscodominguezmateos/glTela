@@ -19,6 +19,7 @@ class Particula {
 	Vector3D fuerza;
 	bool fija;
 public:
+	static constexpr float dt=0.005;
 	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(1.0),posicion(x,y,z),fija(false){}
 	virtual ~Particula();
 	inline Vector3D& getPosicion() {return posicion;}
@@ -43,25 +44,30 @@ public:
 	inline void acumulaFuerza(Vector3D f){fuerza+=f;}
 	inline void aplicaFuerza(){
 		if(!fija) {
-			float dt=0.001;
 			Vector3D aceleracion=fuerza/masa;
-			velocidad+=aceleracion*dt;
+			Vector3D dv=aceleracion*dt;
+			velocidad+=dv;
+			//try to avoid numerical unstability
+			if(velocidad.length()>5.0)
+				velocidad=Vector3D(0,0,0);
 			actualiza();
 		}
 	}
 	inline void actualiza(){
 		float vx,vy,vz;
-		Vector3D p=Vector3D(posicion+velocidad);
+		Vector3D dp=velocidad*dt;
+		Vector3D p=posicion+dp;
 		if (p.getY()<0){
 			vx=velocidad.getX();
 			vy=velocidad.getY();
 			vz=velocidad.getZ();
-			velocidad.set(vx,-vy*0.95,vz);
+			velocidad.set(vx,-vy*0.4,vz);
 		}
 		else if (fabs(p.getX())>2)
 			    velocidad*=-0.95;
 		     else
 			    posicion=p;
+		posicion=p;
 	}
 	friend std::ostream &operator << (std::ostream &os, const Particula &p);
 

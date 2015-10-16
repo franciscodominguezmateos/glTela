@@ -117,7 +117,7 @@ void idle()
     t.limpiaFuerza();
     t.acumulaFuerza(gravedad);
     t.aplicaFuerza();
-    //usleep(10000);
+    usleep(1000000*Particula::dt);
 }
 void keyPressed (unsigned char key, int x, int y) {
 	x++;
@@ -164,7 +164,7 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     //glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(700, 700);
     glutInitWindowPosition(250, 250);
     glutCreateWindow("Teacup");
     init();

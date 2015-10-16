@@ -37,7 +37,7 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 			float l=(pos1-pos2).length();
 			f->setParticula1(p1);
 			f->setParticula2(p2);
-			f->setLongitudReposo(l*0.9);
+			f->setLongitudReposo(l*0.5);
 			fibras.push_back(f);
 		}
 		if(k>0){
@@ -52,7 +52,7 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 				float l=(pos1-pos2).length();
 				f->setParticula1(p1);
 				f->setParticula2(p2);
-				f->setLongitudReposo(l*0.9);
+				f->setLongitudReposo(l*0.5);
 				fibras.push_back(f);
 			}
 		}
