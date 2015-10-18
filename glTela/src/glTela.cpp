@@ -15,6 +15,7 @@
 #include "rozamientoViscoso.h"
 #include "hilo.h"
 #include "tela.h"
+#include "depthImage.h"
 
 using namespace std;
 
@@ -27,10 +28,11 @@ GLfloat yaw = 0.0;
 GLfloat roll = 0.0;
 GLfloat pitch = 0.0;
 
-Vector3D gravedad(0.0,-0.98,0.0);
+Vector3D gravedad(0.0,-0.98/10,0.0);
 RozamientoViscoso rv;
 Hilo h(20.0,1.0,0.0);
-Tela t(40*1,30*1,-1,-1,1,1);
+Tela t(40*16,30*16,-1,-1,1,1);
+DepthImage di;
 
 void displayMe(void)
 {
@@ -98,7 +100,7 @@ void reshape(int width, int height)
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(90.0f, (GLfloat)width/(GLfloat)height, 1.0f, 200.0f);
+    gluPerspective(60.0f, (GLfloat)width/(GLfloat)height, 0.5f, 200.0f);
 
     glMatrixMode(GL_MODELVIEW);
     ancho = width;
@@ -165,6 +167,11 @@ void keyPressed (unsigned char key, int x, int y) {
 
 int main(int argc, char** argv)
 {
+	t.calculaLongitudReposo(0.01);
+	int u=80,v=60;
+	t.getParticula(u,v)->setFija();
+	t.getParticula(u-20,v)->setFija();
+	t.getParticula(u+20,v)->setFija();
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     //glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);

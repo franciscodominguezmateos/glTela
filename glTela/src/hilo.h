@@ -70,6 +70,17 @@ public:
 		for(Particula *p:puntos)
 			p->aplicaFuerza();
 	}
+	void calculaLongitudReposo(float s){
+		for(FuerzaElastica *f:fibras){
+			Particula *p1,*p2;
+			p1=f->getParticula1();
+			p2=f->getParticula2();
+			Vector3D pos1=p1->getPosicion();
+			Vector3D pos2=p2->getPosicion();
+			float l=(pos1-pos2).length();
+			f->setLongitudReposo(l*s);
+		}
+	}
 };
 
 #endif /* HILO_H_ */

@@ -20,7 +20,7 @@ class Particula {
 	bool fija;
 public:
 	static constexpr float dt=0.005;
-	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(1.0),posicion(x,y,z),fija(false){}
+	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(0.01),posicion(x,y,z),fija(false){}
 	virtual ~Particula();
 	inline Vector3D& getPosicion() {return posicion;}
 	inline Vector3D& getVelocidad(){return velocidad;}
@@ -48,8 +48,8 @@ public:
 			Vector3D dv=aceleracion*dt;
 			velocidad+=dv;
 			//try to avoid numerical unstability
-			if(velocidad.length()>5.0)
-				velocidad=Vector3D(0,0,0);
+//			if(velocidad.length()>5.0)
+//				velocidad=Vector3D(0,0,0);
 			actualiza();
 		}
 	}
@@ -61,11 +61,11 @@ public:
 			vx=velocidad.getX();
 			vy=velocidad.getY();
 			vz=velocidad.getZ();
-			velocidad.set(vx,-vy*0.4,vz);
+			velocidad.set(vx,-vy*0.5,vz);
 			p.setY(0.0);
 		}
 		else if (fabs(p.getX())>2){
-			    velocidad*=-0.95;
+			    velocidad*=-0.5;
 			    p.setX(0.0);
 		}
 		     else

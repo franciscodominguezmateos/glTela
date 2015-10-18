@@ -12,10 +12,13 @@ Tela::Tela() {
 
 }
 Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
+	width=w;
+	eight=h;
 	int size=w*h;
 	float sx=(xf-xi)/w;
 	float sz=(zf-zi)/h;
 	float zc=zi;
+	//crea particulas
 	for(int k=0;k<h;k++){
 		float xc=xi;
 		for(int i=0;i<w;i++){
@@ -25,6 +28,7 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 		}
 		zc+=sz;
 	}
+	//conecta particulas
 	for(int k=0;k<h;k++){
 		for(int i=0;i<w-1;i++){
 			Particula *p1,*p2;
@@ -57,6 +61,15 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 			}
 		}
 	}
+    setMarcoFijo();
+}
+
+Tela::~Tela() {
+	// TODO Auto-generated destructor stub
+}
+void Tela::setMarcoFijo(){
+	int h=eight;
+	int w=width;
 	for(int i=0;i<w;i++){
 		puntos[i]->setFija();
 		puntos[i+(h-1)*w]->setFija();
@@ -65,9 +78,5 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 		puntos[k*w]->setFija();
 		puntos[k*w+w-1]->setFija();
 	}
-}
-
-Tela::~Tela() {
-	// TODO Auto-generated destructor stub
 }
 

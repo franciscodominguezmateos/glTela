@@ -3,6 +3,7 @@
 	<name>glTela</name>
 	<comment></comment>
 	<projects>
+		<project>cRGBD</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

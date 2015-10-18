@@ -352,7 +352,7 @@ inline Vector3D operator*(float scalar, const Vector3D &v){
 inline bool equalsZero(float a){
 	//float almost never is 0.0
 	//This value shoud be a const
-	return fabs(a)<1e-20;
+	return fabs(a)<1e-30;
 }
 
 inline Vector3D operator/(const Vector3D &v, float scalar){
