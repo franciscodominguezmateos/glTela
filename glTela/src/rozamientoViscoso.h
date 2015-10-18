@@ -13,7 +13,7 @@
 class RozamientoViscoso {
 	float kv;
 public:
-	RozamientoViscoso():kv(0.05){}
+	RozamientoViscoso():kv(0.5){}
 	virtual ~RozamientoViscoso();
 	inline Vector3D getFuerza(Particula *p){
 		Vector3D v=p->getVelocidad();

@@ -36,7 +36,7 @@ DepthImage::DepthImage(string basepath,int nImg):DepthImage(){
 	string assopath,imagepath,depthpath;
 	assopath=basepath+"/association.txt";
 	vector<string> lines=getLinesFromFile(assopath);
-	vector<string> words=split(lines[10]);
+	vector<string> words=split(lines[nImg]);
     imagepath=basepath +"/"+words[1];
     depthpath=basepath +"/"+words[3];
     Mat image = imread(imagepath, IMREAD_COLOR );
@@ -60,6 +60,14 @@ Point3f DepthImage::getPoint3D(int u,int v){
 	float y=v;
 	float deep=dImg.at<float>(v,u);
 	float Z=deep/factor;
+	float X = (x - cx) * Z / fx;
+	float Y = (y - cy) * Z / fy;
+	return Point3f(X,Y,Z);
+}
+Point3f DepthImage::getPoint3Ddeep(int u,int v,float deep){
+	float x=u;
+	float y=v;
+	float Z=deep;
 	float X = (x - cx) * Z / fx;
 	float Y = (y - cy) * Z / fy;
 	return Point3f(X,Y,Z);
@@ -89,7 +97,7 @@ void DepthImage::setDepth(const Mat& img) {
 	centroid.z/=pts.size();
 }
 void DepthImage::glRender(){
-	glPointSize(1.0);
+	glPointSize(2.0);
 	glBegin(GL_POINTS);
 	for (int v=0;v<dImg.rows;v++)
 	{

@@ -15,6 +15,8 @@ public:
 	Tela();
 	Tela(int w,int h,float xi,float zi,float xf,float zf);
 	virtual ~Tela();
+	inline int getWidth(){return width;}
+	inline int getEight(){return eight;}
 	void setMarcoFijo();
 	inline Particula *getParticula(int u,int v){return puntos[width*v+u];}
 };

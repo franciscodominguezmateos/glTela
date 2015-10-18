@@ -20,7 +20,7 @@ class FuerzaElastica {
 	float Ka;
 	Particula *p1,*p2;
 public:
-	inline FuerzaElastica():longRep(0.25),Km(100.0/1.0),Ka(0.0/50.0),p1(nullptr),p2(nullptr){};
+	inline FuerzaElastica():longRep(0.25),Km(80.0/1.0),Ka(0.0/50.0),p1(nullptr),p2(nullptr){};
 	inline Particula *getParticula1(){return p1;}
 	inline Particula *getParticula2(){return p2;}
 	inline void setParticula1(Particula *p){p1=p;}
@@ -34,6 +34,9 @@ public:
 		Vector3D pos2=p2->getPosicion();
 		Vector3D deltaP=pos1-pos2;
 		float dist=deltaP.length();
+		//if p1 and p2 are together don't do anything
+		if(dist<1e-6)
+			return Vector3D();
 		float magMuelle=(dist-longRep)*Km;
 		//Amortiguador
 		Vector3D v1=p1->getVelocidad();

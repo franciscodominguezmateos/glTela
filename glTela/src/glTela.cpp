@@ -28,17 +28,20 @@ GLfloat yaw = 0.0;
 GLfloat roll = 0.0;
 GLfloat pitch = 0.0;
 
-Vector3D gravedad(0.0,-0.98/10,0.0);
+Vector3D gravedad(0.0,0.0,-0.98/10);
 RozamientoViscoso rv;
 Hilo h(20.0,1.0,0.0);
-Tela t(40*16,30*16,-1,-1,1,1);
+Tela t(40*8,30*8,-1,-1,1,1);
 DepthImage di;
+
+bool wires=true;
+bool friccion=true;
 
 void displayMe(void)
 {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt (0.0, 1.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt (0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     GLfloat lightpos[] = {5.0, 15., 5., 0.};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 //    glTranslatef(0.0f, 0.0f, -3.0f);
@@ -47,41 +50,46 @@ void displayMe(void)
     glRotatef(roll ,0.0,0.0,1.0);
 
     h.glRender();
-    t.glRender();
+    glPushMatrix();
+      glTranslatef(-di.getCentroid().x, di.getCentroid().y, di.getCentroid().z);
+      if(wires)
+    	  t.glRender();
+      di.glRender();
+    glPopMatrix();
 
-    glPushMatrix();
-     glColor3f(1.0f, 1.0f, 0.0f);
-     glRotatef(angle*2,0.0,1.0,0.0);
-     glTranslatef(0.8,0.5,0.0);
-     glutSolidCube(0.35);
-      glPushMatrix();
-       glColor3f(1.0f, 0.0f, 0.0f);
-       glRotatef(angle*2,0.0,1.0,0.0);
-       glTranslatef(0.5,0.0,0.0);
-       glutSolidSphere(0.1,20,20);
-      glPopMatrix();
-    glPopMatrix();
-    glPushMatrix();
-     glColor3f(0.0f, 1.0f, 1.0f);
-     glTranslatef(-0.8,0.05,-0.8);
-     glutSolidSphere(0.1,10,20);
-    glPopMatrix();
+//    glPushMatrix();
+//     glColor3f(1.0f, 1.0f, 0.0f);
+//     glRotatef(angle*2,0.0,1.0,0.0);
+//     glTranslatef(0.8,0.5,0.0);
+//     glutSolidCube(0.35);
+//      glPushMatrix();
+//       glColor3f(1.0f, 0.0f, 0.0f);
+//       glRotatef(angle*2,0.0,1.0,0.0);
+//       glTranslatef(0.5,0.0,0.0);
+//       glutSolidSphere(0.1,20,20);
+//      glPopMatrix();
+//    glPopMatrix();
+//    glPushMatrix();
+//     glColor3f(0.0f, 1.0f, 1.0f);
+//     glTranslatef(-0.8,0.05,-0.8);
+//     glutSolidSphere(0.1,10,20);
+//    glPopMatrix();
     //glColor3f(0.0f, 1.0f, 0.0f);
     //glutSolidTeapot(0.5);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_POLYGON);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(0.5, 0.0, 0.0);
-        glVertex3f(0.5, 0.5, 0.0);
-        glVertex3f(0.0, 0.5, 0.0);
-    glEnd();
-    glColor3f(0.0f, 1.0f, 1.0f);
-    glBegin(GL_POLYGON);
-        glVertex3f(-1.0, 0.0, -1.0);
-        glVertex3f( 1.0, 0.0, -1.0);
-        glVertex3f( 1.0, 0.0,  1.0);
-        glVertex3f(-1.0, 0.0,  1.0);
-    glEnd();
+//    glColor3f(1.0f, 0.0f, 0.0f);
+//    glBegin(GL_POLYGON);
+//        glVertex3f(0.0, 0.0, 0.0);
+//        glVertex3f(0.5, 0.0, 0.0);
+//        glVertex3f(0.5, 0.5, 0.0);
+//        glVertex3f(0.0, 0.5, 0.0);
+//    glEnd();
+//    glColor3f(0.0f, 1.0f, 1.0f);
+//    glBegin(GL_POLYGON);
+//        glVertex3f(-1.0, 0.0, -1.0);
+//        glVertex3f( 1.0, 0.0, -1.0);
+//        glVertex3f( 1.0, 0.0,  1.0);
+//        glVertex3f(-1.0, 0.0,  1.0);
+//    glEnd();
     //glFlush();
     glutSwapBuffers();
     angle++;
@@ -89,9 +97,9 @@ void displayMe(void)
 
 void init (void) {
     glEnable (GL_DEPTH_TEST);
-    glEnable (GL_LIGHTING);
-    glEnable (GL_LIGHT0);
-    glEnable(GL_COLOR_MATERIAL);
+    //glEnable (GL_LIGHTING);
+    //glEnable (GL_LIGHT0);
+    //glEnable(GL_COLOR_MATERIAL);
     glClearColor (0.0,0.0,0.0,0.0);
 }
 
@@ -100,7 +108,7 @@ void reshape(int width, int height)
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0f, (GLfloat)width/(GLfloat)height, 0.5f, 200.0f);
+    gluPerspective(30.0f, (GLfloat)width/(GLfloat)height, 0.5f, 200.0f);
 
     glMatrixMode(GL_MODELVIEW);
     ancho = width;
@@ -117,11 +125,12 @@ void idle()
     }
     h.aplicaFuerza();
     t.limpiaFuerza();
-    for(Particula *p:t.getPuntos()){
-    	Vector3D fr=rv.getFuerza(p);
-    	p->acumulaFuerza(fr);
-    }
-    t.acumulaFuerza(gravedad);
+    if(friccion)
+    	for(Particula *p:t.getPuntos()){
+    		Vector3D fr=rv.getFuerza(p);
+    	    p->acumulaFuerza(fr);
+    	}
+    //t.acumulaFuerza(gravedad);
     t.aplicaFuerza();
     usleep(1000000*Particula::dt);
 }
@@ -158,6 +167,22 @@ void keyPressed (unsigned char key, int x, int y) {
     case 'S':
       roll--;
       break;
+    case 'v':
+    case 'V':
+      wires=true;
+      break;
+    case 'b':
+    case 'B':
+      wires=false;;
+      break;
+    case 'f':
+    case 'F':
+      friccion=true;;
+      break;
+    case 'g':
+    case 'G':
+      friccion=false;;
+      break;
 
     case 27:   // escape
       exit(0);
@@ -167,11 +192,40 @@ void keyPressed (unsigned char key, int x, int y) {
 
 int main(int argc, char** argv)
 {
-	t.calculaLongitudReposo(0.01);
-	int u=80,v=60;
-	t.getParticula(u,v)->setFija();
-	t.getParticula(u-20,v)->setFija();
-	t.getParticula(u+20,v)->setFija();
+	string basepath;
+	if ( argc != 2 )
+		{
+	        printf("usage: cRGB pathToRGBDdataset \n");
+	        return -1;
+	}
+	basepath=argv[1];
+	DepthImage dImg(basepath,10);
+    di=dImg.sparse();
+    cout << di.getCentroid()<< " centroid"<<endl;
+    cout << di.getPoints3D().size()/1000 << "mil filtered points" <<endl;
+
+//	int u=80,v=60;
+//	t.getParticula(u,v)->setFija();
+//	t.getParticula(u-20,v)->setFija();
+//	t.getParticula(u+20,v)->setFija();
+	for(int v=0;v<t.getEight();v++)
+		for(int u=0;u<t.getWidth();u++){
+			Particula *p=t.getParticula(u,v);
+			int udi=u<<1;
+			int vdi=v<<1;
+			if(di.isGoodDepthPixel(udi,vdi)){
+				p->setFija();
+				Point3f point=di.getPoint3D(udi,vdi);
+				p->getPosicion().set(point.x,-point.y,-point.z);
+			}
+			else{
+				Point3f point=di.getPoint3Ddeep(udi,vdi,di.getCentroid().z);
+				//p->getPosicion().set(point.x,-point.y,-di.getCentroid().z);
+				p->getPosicion().set(point.x,-point.y,-point.z);
+			}
+		}
+    t.calculaLongitudReposo(0.1);
+
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     //glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);

@@ -54,22 +54,22 @@ public:
 		}
 	}
 	inline void actualiza(){
-		float vx,vy,vz;
+		//float vx,vy,vz;
 		Vector3D dp=velocidad*dt;
 		Vector3D p=posicion+dp;
-		if (p.getY()<0){
-			vx=velocidad.getX();
-			vy=velocidad.getY();
-			vz=velocidad.getZ();
-			velocidad.set(vx,-vy*0.5,vz);
-			p.setY(0.0);
-		}
-		else if (fabs(p.getX())>2){
-			    velocidad*=-0.5;
-			    p.setX(0.0);
-		}
-		     else
-			    posicion=p;
+//		if (p.getY()<0){
+//			vx=velocidad.getX();
+//			vy=velocidad.getY();
+//			vz=velocidad.getZ();
+//			velocidad.set(vx,-vy*0.5,vz);
+//			p.setY(0.0);
+//		}
+//		else if (fabs(p.getX())>2){
+//			    velocidad*=-0.5;
+//			    p.setX(0.0);
+//		}
+//		     else
+//			    posicion=p;
 		posicion=p;
 	}
 	friend std::ostream &operator << (std::ostream &os, const Particula &p);

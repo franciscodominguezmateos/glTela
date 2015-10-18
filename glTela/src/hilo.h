@@ -44,7 +44,7 @@ public:
 			Particula p2=*(fibras[i]->getParticula2());
 			Vector3D pos1=p1.getPosicion();
 			Vector3D pos2=p2.getPosicion();
-		    glColor3f(1.0f, 1.0f, 0.0f);
+		    glColor4f(1.0f, 1.0f, 0.0f,0.9f);
 		    glBegin(GL_LINES);
 		      glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
 		      glVertex3f(pos2.getX(),pos2.getY(),pos2.getZ());
