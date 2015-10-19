@@ -29,6 +29,12 @@ public:
 		int ultimaPos=puntos.size()-1;
 		return puntos[ultimaPos];
 	}
+	inline void glSetColor(Vector3D &col){
+		float r=col.getX();
+		float g=col.getY();
+		float b=col.getZ();
+	    glColor4f(r, g, b,0.9f);
+	}
 	inline void glRender(){
 //	    glColor3f(1.0f, 1.0f, 0.0f);
 //	    glBegin(GL_POINTS);
@@ -44,7 +50,8 @@ public:
 			Particula p2=*(fibras[i]->getParticula2());
 			Vector3D pos1=p1.getPosicion();
 			Vector3D pos2=p2.getPosicion();
-		    glColor4f(1.0f, 1.0f, 0.0f,0.9f);
+			Vector3D col=p1.getColor();
+			glSetColor(col);
 		    glBegin(GL_LINES);
 		      glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
 		      glVertex3f(pos2.getX(),pos2.getY(),pos2.getZ());

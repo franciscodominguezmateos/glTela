@@ -17,17 +17,20 @@ class Particula {
 	Vector3D posicion;
 	Vector3D velocidad;
 	Vector3D fuerza;
+	Vector3D color;
 	bool fija;
 public:
 	static constexpr float dt=0.005;
-	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(0.01),posicion(x,y,z),fija(false){}
+	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(0.01),posicion(x,y,z),color(1.0,1.0,0.0),fija(false){}
 	virtual ~Particula();
 	inline Vector3D& getPosicion() {return posicion;}
 	inline Vector3D& getVelocidad(){return velocidad;}
 	inline Vector3D& getFuerza(){return fuerza;}
+	inline Vector3D& getColor(){return color;}
 	inline void setMasa(float m){masa=m;}
 	inline void setFija(){fija=true;}
 	inline void setLibre(){fija=false;}
+	inline void setColor(Vector3D c){color=c;}
 	inline void glRender(){
 		double tx,ty,tz;
 		tx=posicion.getX();

@@ -14,7 +14,6 @@ Tela::Tela() {
 Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 	width=w;
 	eight=h;
-	int size=w*h;
 	float sx=(xf-xi)/w;
 	float sz=(zf-zi)/h;
 	float zc=zi;
@@ -65,6 +64,45 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 
 Tela::~Tela() {
 	// TODO Auto-generated destructor stub
+}
+void Tela::glRender(){
+	int h=eight;
+	int w=width;
+	for(int k=0;k<h-1;k++){
+		for(int i=0;i<w-1;i++){
+			Particula *p1,*p2,*p3,*p4;
+			p1=getParticula(i+0,k+1);
+			p2=getParticula(i+1,k+1);
+			p3=getParticula(i+1,k+0);
+			p4=getParticula(i+0,k+0);
+			Vector3D pos1,pos2,pos3,pos4;
+			pos1=p1->getPosicion();
+			pos2=p2->getPosicion();
+			pos3=p3->getPosicion();
+			pos4=p4->getPosicion();
+			Vector3D col1,col2,col3,col4;
+			col1=p1->getColor();
+			col2=p2->getColor();
+			col3=p3->getColor();
+			col4=p4->getColor();
+		    glBegin(GL_TRIANGLES);
+		      glSetColor(col1);
+		      glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
+		      glSetColor(col2);
+		      glVertex3f(pos2.getX(),pos2.getY(),pos2.getZ());
+		      glSetColor(col3);
+		      glVertex3f(pos3.getX(),pos3.getY(),pos3.getZ());
+		    glEnd();
+		    glBegin(GL_TRIANGLES);
+		      glSetColor(col3);
+		      glVertex3f(pos3.getX(),pos3.getY(),pos3.getZ());
+		      glSetColor(col4);
+		      glVertex3f(pos4.getX(),pos4.getY(),pos4.getZ());
+		      glSetColor(col1);
+		      glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
+		    glEnd();
+		}
+	}
 }
 void Tela::setMarcoFijo(){
 	int h=eight;

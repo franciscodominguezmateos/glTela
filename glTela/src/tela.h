@@ -19,6 +19,7 @@ public:
 	inline int getEight(){return eight;}
 	void setMarcoFijo();
 	inline Particula *getParticula(int u,int v){return puntos[width*v+u];}
+	void glRender();
 };
 
 #endif /* SRC_TELA_H_ */

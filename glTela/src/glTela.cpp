@@ -213,6 +213,11 @@ int main(int argc, char** argv)
 			Particula *p=t.getParticula(u,v);
 			int udi=u<<1;
 			int vdi=v<<1;
+			Vec3b col=di.getColor(udi,vdi);
+			float b=col.val[0]/255.0;
+			float g=col.val[1]/255.0;
+			float r=col.val[2]/255.0;
+			p->setColor(Vector3D(r,g,b));
 			if(di.isGoodDepthPixel(udi,vdi)){
 				p->setFija();
 				Point3f point=di.getPoint3D(udi,vdi);
