@@ -76,11 +76,14 @@ void displayMe(void)
 //    glPopMatrix();
     //glColor3f(0.0f, 1.0f, 0.0f);
     //glutSolidTeapot(0.5);
-//    glColor3f(1.0f, 0.0f, 0.0f);
 //    glBegin(GL_POLYGON);
+//        glColor3f(1.0f, 0.0f, 0.0f);
 //        glVertex3f(0.0, 0.0, 0.0);
+//        glColor3f(1.0f, 1.0f, 0.0f);
 //        glVertex3f(0.5, 0.0, 0.0);
+//        glColor3f(1.0f, 0.0f, 1.0f);
 //        glVertex3f(0.5, 0.5, 0.0);
+//        glColor3f(0.0f, 0.0f, 1.0f);
 //        glVertex3f(0.0, 0.5, 0.0);
 //    glEnd();
 //    glColor3f(0.0f, 1.0f, 1.0f);
@@ -173,15 +176,22 @@ void keyPressed (unsigned char key, int x, int y) {
       break;
     case 'b':
     case 'B':
-      wires=false;;
+      wires=false;
       break;
     case 'f':
     case 'F':
-      friccion=true;;
+      friccion=true;
       break;
     case 'g':
     case 'G':
-      friccion=false;;
+      friccion=false;
+      break;
+    case 'r':
+    case 'R':
+      cout << t.getFibras().size() << " before R"<<endl;
+      t.rompeFibras(0.05);
+  	  cout << t.getFibras().size() << " after R"<<endl;
+
       break;
 
     case 27:   // escape
@@ -229,6 +239,9 @@ int main(int argc, char** argv)
 				p->getPosicion().set(point.x,-point.y,-point.z);
 			}
 		}
+	cout << t.getFibras().size() << " before"<<endl;
+	t.quitaFibrasFijas();
+	cout << t.getFibras().size() << " after"<<endl;
     t.calculaLongitudReposo(0.1);
 
     glutInit(&argc, argv);

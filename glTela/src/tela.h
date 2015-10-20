@@ -18,8 +18,11 @@ public:
 	inline int getWidth(){return width;}
 	inline int getEight(){return eight;}
 	void setMarcoFijo();
-	inline Particula *getParticula(int u,int v){return puntos[width*v+u];}
+	inline Particula *getParticula(int u,int v){return puntos[getParticulaIndex(u,v)];}
+	inline int        getParticulaIndex(int u,int v){return width*v+u;}
 	void glRender();
+	void quitaFibrasFijas();
+	void rompeFibras(float l);
 };
 
 #endif /* SRC_TELA_H_ */

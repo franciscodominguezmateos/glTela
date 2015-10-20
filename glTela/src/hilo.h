@@ -23,6 +23,7 @@ public:
 	virtual ~Hilo();
 	void filaX(float maxX,float Y,float Z);
 	inline vector<Particula *> getPuntos(){return puntos;}
+	inline vector<FuerzaElastica *> getFibras(){return fibras;}
 	inline void setPuntos(vector<Particula *> pts){puntos=pts;}
 	inline Particula *getPrimeraParticula(){return puntos[0];}
 	inline Particula *getUltimaParticula(){
@@ -51,7 +52,8 @@ public:
 			Vector3D pos1=p1.getPosicion();
 			Vector3D pos2=p2.getPosicion();
 			Vector3D col=p1.getColor();
-			glSetColor(col);
+			//glSetColor(col);
+			glColor3f(1.0,0,0);
 		    glBegin(GL_LINES);
 		      glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
 		      glVertex3f(pos2.getX(),pos2.getY(),pos2.getZ());

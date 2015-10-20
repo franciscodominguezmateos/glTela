@@ -29,6 +29,7 @@ public:
 	inline Vector3D& getColor(){return color;}
 	inline void setMasa(float m){masa=m;}
 	inline void setFija(){fija=true;}
+	inline bool esFija(){return fija;}
 	inline void setLibre(){fija=false;}
 	inline void setColor(Vector3D c){color=c;}
 	inline void glRender(){

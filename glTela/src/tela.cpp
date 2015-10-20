@@ -28,36 +28,37 @@ Tela::Tela(int w,int h,float xi=-1,float zi=-1,float xf=1,float zf=1) {
 		zc+=sz;
 	}
 	//conecta particulas
-	for(int k=0;k<h;k++){
+	for(int k=0;k<h-1;k++){
 		for(int i=0;i<w-1;i++){
-			Particula *p1,*p2;
-			int idx=i+k*w;
-			p1=puntos[idx+0];
-			p2=puntos[idx+1];
+			Particula *p1,*p2,*p3,*p4;
+			p1=getParticula(i+0,k+0);
+			p2=getParticula(i+1,k+0);
+			p3=getParticula(i+1,k+1);
+			p4=getParticula(i+0,k+1);
 			Vector3D pos1=p1->getPosicion();
 			Vector3D pos2=p2->getPosicion();
-			FuerzaElastica *f=new FuerzaElastica();
-			float l=(pos1-pos2).length();
-			f->setParticula1(p1);
-			f->setParticula2(p2);
-			f->setLongitudReposo(l*0.1);
-			fibras.push_back(f);
-		}
-		if(k>0){
-			for(int i=0;i<w;i++){
-				Particula *p1,*p2;
-				int idx=i+(k-1)*w;
-				p1=puntos[idx];
-				p2=puntos[idx+w];
-				Vector3D pos1=p1->getPosicion();
-				Vector3D pos2=p2->getPosicion();
-				FuerzaElastica *f=new FuerzaElastica();
-				float l=(pos1-pos2).length();
-				f->setParticula1(p1);
-				f->setParticula2(p2);
-				f->setLongitudReposo(l*0.1);
-				fibras.push_back(f);
-			}
+			Vector3D pos3=p3->getPosicion();
+			Vector3D pos4=p4->getPosicion();
+			//   ->
+			FuerzaElastica *f1=new FuerzaElastica();
+			f1->setParticula1(p1);
+			f1->setParticula2(p2);
+			//
+			FuerzaElastica *f2=new FuerzaElastica();
+			f2->setParticula1(p1);
+			f2->setParticula2(p3);
+			//   |
+			FuerzaElastica *f3=new FuerzaElastica();
+			f3->setParticula1(p1);
+			f3->setParticula2(p4);
+			//  /
+			FuerzaElastica *f4=new FuerzaElastica();
+			f4->setParticula1(p2);
+			f4->setParticula2(p4);
+			fibras.push_back(f1);
+			fibras.push_back(f2);
+			fibras.push_back(f3);
+			fibras.push_back(f4);
 		}
 	}
 }
@@ -71,10 +72,10 @@ void Tela::glRender(){
 	for(int k=0;k<h-1;k++){
 		for(int i=0;i<w-1;i++){
 			Particula *p1,*p2,*p3,*p4;
-			p1=getParticula(i+0,k+1);
-			p2=getParticula(i+1,k+1);
-			p3=getParticula(i+1,k+0);
-			p4=getParticula(i+0,k+0);
+			p1=getParticula(i+0,k+0);
+			p2=getParticula(i+1,k+0);
+			p3=getParticula(i+1,k+1);
+			p4=getParticula(i+0,k+1);
 			Vector3D pos1,pos2,pos3,pos4;
 			pos1=p1->getPosicion();
 			pos2=p2->getPosicion();
@@ -103,6 +104,7 @@ void Tela::glRender(){
 		    glEnd();
 		}
 	}
+	Hilo::glRender();
 }
 void Tela::setMarcoFijo(){
 	int h=eight;
@@ -116,4 +118,25 @@ void Tela::setMarcoFijo(){
 		puntos[k*w+w-1]->setFija();
 	}
 }
-
+void Tela::quitaFibrasFijas(){
+	vector<FuerzaElastica *> newFibras;
+	for(FuerzaElastica *f:fibras){
+		if(!(      f->getParticula1()->esFija()
+				&& f->getParticula2()->esFija()))
+			newFibras.push_back(f);
+	}
+	fibras=newFibras;
+}
+void Tela::rompeFibras(float l){
+	Particula *p1,*p2;
+	float len;
+	vector<FuerzaElastica *> newFibras;
+	for(FuerzaElastica *f:fibras){
+		p1=f->getParticula1();
+		p2=f->getParticula2();
+		len=(p2->getPosicion()-p1->getPosicion()).length();
+		if(len<l)
+			newFibras.push_back(f);
+	}
+	fibras=newFibras;
+}
