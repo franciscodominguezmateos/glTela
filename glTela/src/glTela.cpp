@@ -31,7 +31,7 @@ GLfloat pitch = 0.0;
 Vector3D gravedad(0.0,0.0,-0.98/10);
 RozamientoViscoso rv;
 Hilo h(20.0,1.0,0.0);
-Tela t(40*8,30*8,-1,-1,1,1);
+Tela t(40*16,30*16,-1,-1,1,1);
 DepthImage di;
 
 bool wires=true;
@@ -120,6 +120,7 @@ void reshape(int width, int height)
 void idle()
 {
     displayMe();
+    /*
     h.limpiaFuerza();
     h.acumulaFuerza(gravedad);
     for(Particula *p:h.getPuntos()){
@@ -134,7 +135,9 @@ void idle()
     	    p->acumulaFuerza(fr);
     	}
     //t.acumulaFuerza(gravedad);
-    t.aplicaFuerza();
+    //t.aplicaFuerza();
+     *
+     */
     usleep(1000000*Particula::dt);
 }
 void keyPressed (unsigned char key, int x, int y) {
@@ -199,7 +202,39 @@ void keyPressed (unsigned char key, int x, int y) {
       break;
     }
 }
-
+int findPartiulaFijaIdxInCol(int u,int v){
+	int j=v;
+	for(;j<t.getEight();j++){
+		Particula *p=t.getParticula(u,j);
+		if(p->esFija())
+			return j;
+	}
+	return j-1;
+}
+void estimateDepth(int u,int v0,int v1){
+	Particula *p0=t.getParticula(u,v0);
+	Particula *p1=t.getParticula(u,v1);
+	double z0=-p0->getPosicion().getZ();
+	double z1=-p1->getPosicion().getZ();
+	float n=v1-v0;
+	double slope=(z1-z0)/n;
+	for(int v=v0+1;v<v1;v++){
+		Particula *p=t.getParticula(u,v);
+		double Zestimated=z0+slope*(v-v0);
+		Point3f point=di.getPoint3Ddeep(u,v,Zestimated);
+		p->getPosicion().set(point.x,-point.y,-point.z);
+	}
+}
+void densifica(){
+	for(int u=0;u<t.getWidth();u++){
+		int idx0=findPartiulaFijaIdxInCol(u,0);
+		for(int v=idx0;v<t.getEight()-1;){
+			int idx1=findPartiulaFijaIdxInCol(u,v+1);
+			estimateDepth(u,v,idx1);
+			v=idx1;
+		}
+	}
+}
 int main(int argc, char** argv)
 {
 	string basepath;
@@ -221,8 +256,8 @@ int main(int argc, char** argv)
 	for(int v=0;v<t.getEight();v++)
 		for(int u=0;u<t.getWidth();u++){
 			Particula *p=t.getParticula(u,v);
-			int udi=u<<1;
-			int vdi=v<<1;
+			int udi=u<<0;
+			int vdi=v<<0;
 			Vec3b col=di.getColor(udi,vdi);
 			float b=col.val[0]/255.0;
 			float g=col.val[1]/255.0;
@@ -243,6 +278,7 @@ int main(int argc, char** argv)
 	t.quitaFibrasFijas();
 	cout << t.getFibras().size() << " after"<<endl;
     t.calculaLongitudReposo(0.1);
+    densifica();
 
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

@@ -104,7 +104,7 @@ void Tela::glRender(){
 		    glEnd();
 		}
 	}
-	Hilo::glRender();
+	//Hilo::glRender();
 }
 void Tela::setMarcoFijo(){
 	int h=eight;
