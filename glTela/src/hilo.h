@@ -19,9 +19,9 @@ protected:
 	vector<FuerzaElastica *> fibras;
 public:
 	Hilo();
-	Hilo(float maxX,float Y,float Z);
+	Hilo(double maxX,double Y,double Z);
 	virtual ~Hilo();
-	void filaX(float maxX,float Y,float Z);
+	void filaX(double maxX,double Y,double Z);
 	inline vector<Particula *> getPuntos(){return puntos;}
 	inline vector<FuerzaElastica *> getFibras(){return fibras;}
 	inline void setPuntos(vector<Particula *> pts){puntos=pts;}
@@ -31,20 +31,20 @@ public:
 		return puntos[ultimaPos];
 	}
 	inline void glSetColor(Vector3D &col){
-		float r=col.getX();
-		float g=col.getY();
-		float b=col.getZ();
+		double r=col.getX();
+		double g=col.getY();
+		double b=col.getZ();
 	    glColor4f(r, g, b,0.9f);
 	}
 	inline void glRender(){
-//	    glColor3f(1.0f, 1.0f, 0.0f);
-//	    glBegin(GL_POINTS);
-//		for(Particula *p:puntos){
-//			//p->glRender();
-//			Vector3D pos1=p->getPosicion();
-//		    glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
-//		}
-//		glEnd();
+	    glColor3f(1.0f, 1.0f, 0.0f);
+	    glBegin(GL_POINTS);
+		for(Particula *p:puntos){
+			//p->glRender();
+			Vector3D pos1=p->getPosicion();
+		    glVertex3f(pos1.getX(),pos1.getY(),pos1.getZ());
+		}
+		glEnd();
 		int s=fibras.size();
 		for(int i=0;i<s;i++){
 			Particula p1=*(fibras[i]->getParticula1());
@@ -79,14 +79,14 @@ public:
 		for(Particula *p:puntos)
 			p->aplicaFuerza();
 	}
-	void calculaLongitudReposo(float s){
+	void calculaLongitudReposo(double s){
 		for(FuerzaElastica *f:fibras){
 			Particula *p1,*p2;
 			p1=f->getParticula1();
 			p2=f->getParticula2();
 			Vector3D pos1=p1->getPosicion();
 			Vector3D pos2=p2->getPosicion();
-			float l=(pos1-pos2).length();
+			double l=(pos1-pos2).length();
 			f->setLongitudReposo(l*s);
 		}
 	}

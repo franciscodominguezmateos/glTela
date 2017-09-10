@@ -20,14 +20,14 @@ class Particula {
 	Vector3D color;
 	bool fija;
 public:
-	static constexpr float dt=0.005;
-	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(0.01),posicion(x,y,z),color(1.0,1.0,0.0),fija(false){}
+	static constexpr double dt=0.001;
+	inline Particula(double x=0.0,double y=0.0,double z=0.0):masa(0.02),posicion(x,y,z),color(1.0,1.0,0.0),fija(false){}
 	virtual ~Particula();
 	inline Vector3D& getPosicion() {return posicion;}
 	inline Vector3D& getVelocidad(){return velocidad;}
 	inline Vector3D& getFuerza(){return fuerza;}
 	inline Vector3D& getColor(){return color;}
-	inline void setMasa(float m){masa=m;}
+	inline void setMasa(double m){masa=m;}
 	inline void setFija(){fija=true;}
 	inline bool esFija(){return fija;}
 	inline void setLibre(){fija=false;}
@@ -52,28 +52,28 @@ public:
 			Vector3D dv=aceleracion*dt;
 			velocidad+=dv;
 			//try to avoid numerical unstability
-//			if(velocidad.length()>5.0)
-//				velocidad=Vector3D(0,0,0);
+			if(velocidad.length()>500.0)
+				velocidad=Vector3D(0,0,0);
 			actualiza();
 		}
 	}
 	inline void actualiza(){
-		//float vx,vy,vz;
+		double vx,vy,vz;
 		Vector3D dp=velocidad*dt;
 		Vector3D p=posicion+dp;
-//		if (p.getY()<0){
-//			vx=velocidad.getX();
-//			vy=velocidad.getY();
-//			vz=velocidad.getZ();
-//			velocidad.set(vx,-vy*0.5,vz);
-//			p.setY(0.0);
-//		}
-//		else if (fabs(p.getX())>2){
-//			    velocidad*=-0.5;
-//			    p.setX(0.0);
-//		}
-//		     else
-//			    posicion=p;
+		if (p.getY()<0){
+			vx=velocidad.getX();
+			vy=velocidad.getY();
+			vz=velocidad.getZ();
+			velocidad.set(vx,-vy*0.0,vz);
+			p.setY(0.0001);
+		}
+		else if (fabs(p.getX())>2){
+			    velocidad*=-0.75;
+			    //p.setX(0.0);
+		}
+		     else
+			    posicion=p;
 		posicion=p;
 	}
 	friend std::ostream &operator << (std::ostream &os, const Particula &p);

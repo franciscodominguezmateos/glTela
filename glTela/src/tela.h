@@ -13,16 +13,17 @@ class Tela: public Hilo {
 	int width,eight;
 public:
 	Tela();
-	Tela(int w,int h,float xi,float zi,float xf,float zf);
+	Tela(double l);
+	Tela(int w,int h,double xi,double zi,double xf,double zf);
 	virtual ~Tela();
 	inline int getWidth(){return width;}
-	inline int getEight(){return eight;}
+	inline int getHeight(){return eight;}
 	void setMarcoFijo();
 	inline Particula *getParticula(int u,int v){return puntos[getParticulaIndex(u,v)];}
 	inline int        getParticulaIndex(int u,int v){return width*v+u;}
 	void glRender();
 	void quitaFibrasFijas();
-	void rompeFibras(float l);
+	void rompeFibras(double l);
 };
 
 #endif /* SRC_TELA_H_ */

@@ -11,9 +11,9 @@
 #include "particula.h"
 
 class RozamientoViscoso {
-	float kv;
+	double kv;
 public:
-	RozamientoViscoso():kv(0.5){}
+	RozamientoViscoso():kv(0.09515){}
 	virtual ~RozamientoViscoso();
 	inline Vector3D getFuerza(Particula *p){
 		Vector3D v=p->getVelocidad();

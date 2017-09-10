@@ -19,6 +19,10 @@
 
 using namespace std;
 
+int mx=-1,my=-1;        // Prevous mouse coordinates
+int rotangles[2] = {0}; // Panning angles
+float dist=-5.0;
+
 GLint ancho=400;
 
 GLint alto=400;
@@ -28,10 +32,12 @@ GLfloat yaw = 0.0;
 GLfloat roll = 0.0;
 GLfloat pitch = 0.0;
 
-Vector3D gravedad(0.0,0.0,-0.98/10);
+//Vector3D gravedad(0.0,0.0,-0.98/10);
+Vector3D gravedad(0.0,-0.98,0.0);
 RozamientoViscoso rv;
 Hilo h(20.0,1.0,0.0);
-Tela t(40*16,30*16,-1,-1,1,1);
+Tela t(50,50,-1,-1,1,1);
+Tela cubo(0.15);
 DepthImage di;
 
 bool wires=true;
@@ -41,21 +47,37 @@ void displayMe(void)
 {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt (0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    //gluLookAt (0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    glTranslatef(0.0f, 0.0f, dist);
+    //gluLookAt (0.0, 2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    //glRotatef(yaw  ,0.0,1.0,0.0);
+    //glRotatef(pitch,1.0,0.0,0.0);
+    //glRotatef(roll ,0.0,0.0,1.0);
+    glRotatef(rotangles[0], 1,0,0);
+    glRotatef(rotangles[1], 0,1,0);
     GLfloat lightpos[] = {5.0, 15., 5., 0.};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 //    glTranslatef(0.0f, 0.0f, -3.0f);
-    glRotatef(yaw  ,0.0,1.0,0.0);
-    glRotatef(pitch,1.0,0.0,0.0);
-    glRotatef(roll ,0.0,0.0,1.0);
+    //glRotatef(yaw  ,0.0,1.0,0.0);
+    //glRotatef(pitch,1.0,0.0,0.0);
+    //glRotatef(roll ,0.0,0.0,1.0);
 
     h.glRender();
-    glPushMatrix();
-      glTranslatef(-di.getCentroid().x, di.getCentroid().y, di.getCentroid().z);
-      if(wires)
-    	  t.glRender();
-      di.glRender();
-    glPopMatrix();
+    cubo.glRender();
+    t.glRender();
+    //glPushMatrix();
+      //glTranslatef(-di.getCentroid().x, di.getCentroid().y, di.getCentroid().z);
+      //if(wires)
+    	//  t.glRender();
+      //di.glRender();
+    //glPopMatrix();
+    glColor3f(0.0f, 1.0f, 0.8f);
+    glBegin(GL_POLYGON);
+        glVertex3f(-1.0, 0.0,-1.0);
+        glVertex3f(-1.0, 0.0, 1.0);
+        glVertex3f( 1.0, 0.0, 1.0);
+        glVertex3f( 1.0, 0.0,-1.0);
+    glEnd();
 
 //    glPushMatrix();
 //     glColor3f(1.0f, 1.0f, 0.0f);
@@ -72,7 +94,8 @@ void displayMe(void)
 //    glPushMatrix();
 //     glColor3f(0.0f, 1.0f, 1.0f);
 //     glTranslatef(-0.8,0.05,-0.8);
-//     glutSolidSphere(0.1,10,20);
+     glColor4f(0,1,1,0.1);
+     //glutSolidSphere(0.50,20,20);
 //    glPopMatrix();
     //glColor3f(0.0f, 1.0f, 0.0f);
     //glutSolidTeapot(0.5);
@@ -100,9 +123,9 @@ void displayMe(void)
 
 void init (void) {
     glEnable (GL_DEPTH_TEST);
-    //glEnable (GL_LIGHTING);
-    //glEnable (GL_LIGHT0);
-    //glEnable(GL_COLOR_MATERIAL);
+    glEnable (GL_LIGHTING);
+    glEnable (GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
     glClearColor (0.0,0.0,0.0,0.0);
 }
 
@@ -117,16 +140,42 @@ void reshape(int width, int height)
     ancho = width;
     alto = height;
 }
+Vector3D stopN(Vector3D v,Vector3D n){
+	Vector3D self,projectionV,dif,reflectedV,newV;
+	double projectionN;
+	self=v;
+	projectionN=self*n;
+	projectionV=projectionN*n;
+	dif=self-projectionV;
+	reflectedV=-projectionV;
+	newV=dif+reflectedV*0;
+	return newV;
+}
+void colisiones(Hilo &t){
+	for(Particula *p:t.getPuntos()){
+		Vector3D &pos=p->getPosicion();
+		Vector3D n=pos.normalized();
+		if(pos.length()<0.50){
+			pos.normalize();
+			pos*=0.51;
+			cout << "tocado" << endl;
+			p->getVelocidad()=stopN(p->getVelocidad(),n)*0.5;
+			//p->getFuerza()   =stopN(p->getFuerza()   ,n);
+			//p->setFija();
+		}
+	}
+}
 void idle()
 {
     displayMe();
-    /*
+
     h.limpiaFuerza();
     h.acumulaFuerza(gravedad);
     for(Particula *p:h.getPuntos()){
     	Vector3D fr=rv.getFuerza(p);
     	p->acumulaFuerza(fr);
     }
+    colisiones(h);
     h.aplicaFuerza();
     t.limpiaFuerza();
     if(friccion)
@@ -134,11 +183,19 @@ void idle()
     		Vector3D fr=rv.getFuerza(p);
     	    p->acumulaFuerza(fr);
     	}
-    //t.acumulaFuerza(gravedad);
-    //t.aplicaFuerza();
-     *
-     */
-    usleep(1000000*Particula::dt);
+    t.acumulaFuerza(gravedad);
+    //colisiones();
+    t.aplicaFuerza();
+    colisiones(t);
+    cubo.limpiaFuerza();
+    cubo.acumulaFuerza(gravedad);
+    for(Particula *p:cubo.getPuntos()){
+    	Vector3D fr=rv.getFuerza(p);
+    	p->acumulaFuerza(fr);
+    }
+    colisiones(cubo);
+    cubo.aplicaFuerza();
+    usleep(1000000*1*Particula::dt);
 }
 void keyPressed (unsigned char key, int x, int y) {
 	x++;
@@ -157,12 +214,12 @@ void keyPressed (unsigned char key, int x, int y) {
       break;
     case 'q':
     case 'Q':
-      pitch++;
+      dist++;
       break;
 
     case 'a':
     case 'A':
-      pitch--;
+      dist--;
       break;
     case 'w':
     case 'W':
@@ -202,6 +259,28 @@ void keyPressed (unsigned char key, int x, int y) {
       break;
     }
 }
+void mouseMoved(int x, int y)
+{
+    if (mx>=0 && my>=0) {
+        rotangles[0] += y-my;
+        rotangles[1] += x-mx;
+    }
+    mx = x;
+    my = y;
+}
+
+void mousePress(int button, int state, int x, int y)
+{
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        mx = x;
+        my = y;
+    }
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+        mx = -1;
+        my = -1;
+    }
+}
+/*
 int findPartiulaFijaIdxInCol(int u,int v){
 	int j=v;
 	for(;j<t.getEight();j++){
@@ -235,6 +314,7 @@ void densifica(){
 		}
 	}
 }
+*/
 int main(int argc, char** argv)
 {
 	string basepath;
@@ -249,11 +329,16 @@ int main(int argc, char** argv)
     cout << di.getCentroid()<< " centroid"<<endl;
     cout << di.getPoints3D().size()/1000 << "mil filtered points" <<endl;
 
-//	int u=80,v=60;
-//	t.getParticula(u,v)->setFija();
-//	t.getParticula(u-20,v)->setFija();
-//	t.getParticula(u+20,v)->setFija();
-	for(int v=0;v<t.getEight();v++)
+	int u=t.getWidth()/2;
+	int v=t.getHeight()/2;
+	//t.setMarcoFijo();
+	//t.getParticula(u,v)->setFija();
+	t.getParticula(u-u/2,v/4)->setFija();
+	t.getParticula(u+u/2-1,v/4)->setFija();
+	//t.getParticula(0,9)->setFija();
+	//t.getParticula(9,9)->setFija();
+//    t.getParticula(u+5,v)->setFija();
+/*	for(int v=0;v<t.getEight();v++)
 		for(int u=0;u<t.getWidth();u++){
 			Particula *p=t.getParticula(u,v);
 			int udi=u<<0;
@@ -279,7 +364,7 @@ int main(int argc, char** argv)
 	cout << t.getFibras().size() << " after"<<endl;
     t.calculaLongitudReposo(0.1);
     densifica();
-
+*/
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     //glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
@@ -291,6 +376,8 @@ int main(int argc, char** argv)
     glutIdleFunc(idle);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyPressed); // Tell GLUT to use the method "keyPressed" for key presses
+    glutMotionFunc(&mouseMoved);
+    glutMouseFunc(&mousePress);
     glutMainLoop();
     return 0;
 }

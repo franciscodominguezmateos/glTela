@@ -9,13 +9,13 @@
 
 Hilo::Hilo() {
 }
-Hilo::Hilo(float maxX,float Y,float Z){
+Hilo::Hilo(double maxX,double Y,double Z){
 	filaX(maxX,Y,Z);
 	puntos[0]->setFija();
 	puntos[9]->setFija();
 
 }
-void Hilo::filaX(float maxX,float Y,float Z) {
+void Hilo::filaX(double maxX,double Y,double Z) {
 	for(int i=0;i<maxX;i++){
 		Particula *p=new Particula(-1+i/maxX*2.0,Y,Z);
 		puntos.push_back(p);
@@ -27,7 +27,7 @@ void Hilo::filaX(float maxX,float Y,float Z) {
 		Vector3D pos1=p1->getPosicion();
 		Vector3D pos2=p2->getPosicion();
 		FuerzaElastica *f=new FuerzaElastica();
-		float l=(pos1-pos2).length();
+		double l=(pos1-pos2).length();
 		f->setParticula1(p1);
 		f->setParticula2(p2);
 		f->setLongitudReposo(l*0.5);
